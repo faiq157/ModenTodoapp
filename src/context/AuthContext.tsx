@@ -3,7 +3,7 @@ import { prisma } from '../lib/prisma';
 
 interface User {
   id: string;
-  email: string;
+  email: string | null;
   name: string | null;
 }
 
@@ -25,7 +25,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const storedUser = localStorage.getItem('authUser');
     if (storedUser) {
       const userData = JSON.parse(storedUser);
-      setUser(userData);
+      if (userData.email) {
+        setUser(userData as User);
+      } else {
+        throw new Error('User email is null');
+      }
       setIsAuthenticated(true);
     }
   }, []);
