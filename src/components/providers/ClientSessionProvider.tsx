@@ -23,8 +23,6 @@ const ClientSessionProvider: React.FC<ClientSessionProviderProps> = ({ children 
       <Header
         user={session?.user || null}  // Pass session data to Header
         onLogout={handleLogout}  // Pass logout function to Header
-        isDarkMode={false}  // Add dark mode logic here
-        toggleDarkMode={() => {}}  // Dark mode toggle logic here
       />
       {children}
     </>

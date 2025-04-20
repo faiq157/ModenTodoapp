@@ -43,7 +43,6 @@ model User {
   accounts      Account[]
   sessions      Session[]
   todos         Todo[]
-  password String
 }
 
 model VerificationToken {
