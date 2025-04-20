@@ -1,5 +1,3 @@
-import React from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { ThemeProvider, useTheme } from './context/ThemeContext';
 import Header from './components/layout/Header';
@@ -7,17 +5,19 @@ import Footer from './components/layout/Footer';
 import HomePage from './pages/HomePage';
 import AuthPage from './pages/AuthPage';
 import TodoPage from './pages/TodoPage';
+import { useRouter } from 'next/router';
 
 const AppContent: React.FC = () => {
   const { isAuthenticated, user, login, logout } = useAuth();
   const { isDarkMode, toggleDarkMode } = useTheme();
+  const router = useRouter();
 
   const handleLoginSuccess = (userData: any) => {
-    login(userData);
+    router.push('/todos');  // Redirect to the Todos page after login success
   };
 
   const handleRegisterSuccess = () => {
-    // Navigate to login after successful registration
+    router.push('/login');  // Redirect to the login page after successful registration
   };
 
   return (
@@ -29,34 +29,23 @@ const AppContent: React.FC = () => {
         toggleDarkMode={toggleDarkMode} 
       />
       <main className="flex-grow">
-        <Routes>
-          <Route path="/" element={<HomePage />} />
-          <Route
-            path="/login"
-            element={
-              <AuthPage
-                isAuthenticated={isAuthenticated}
-                onLoginSuccess={handleLoginSuccess}
-                onRegisterSuccess={handleRegisterSuccess}
-              />
-            }
+        {/* Render pages based on routes */}
+        {router.pathname === '/' && <HomePage />}
+        {router.pathname === '/login' && (
+          <AuthPage
+            isAuthenticated={isAuthenticated}
+            onLoginSuccess={handleLoginSuccess}
+            onRegisterSuccess={handleRegisterSuccess}
           />
-          <Route
-            path="/register"
-            element={
-              <AuthPage
-                isAuthenticated={isAuthenticated}
-                onLoginSuccess={handleLoginSuccess}
-                onRegisterSuccess={handleRegisterSuccess}
-              />
-            }
+        )}
+        {router.pathname === '/register' && (
+          <AuthPage
+            isAuthenticated={isAuthenticated}
+            onLoginSuccess={handleLoginSuccess}
+            onRegisterSuccess={handleRegisterSuccess}
           />
-          <Route
-            path="/todos"
-            element={<TodoPage isAuthenticated={isAuthenticated} />}
-          />
-          <Route path="*" element={<Navigate to="/" replace />} />
-        </Routes>
+        )}
+        {router.pathname === '/todos' && <TodoPage isAuthenticated={isAuthenticated} />}
       </main>
       <Footer />
     </div>
@@ -65,13 +54,11 @@ const AppContent: React.FC = () => {
 
 function App() {
   return (
-    <Router>
-      <ThemeProvider>
-        <AuthProvider>
-          <AppContent />
-        </AuthProvider>
-      </ThemeProvider>
-    </Router>
+    <ThemeProvider>
+      <AuthProvider>
+        <AppContent />
+      </AuthProvider>
+    </ThemeProvider>
   );
 }
 
