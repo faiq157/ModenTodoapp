@@ -10,8 +10,6 @@ interface User {
 interface AuthContextType {
   isAuthenticated: boolean;
   user: User | null;
-  login: (email: string, password: string) => Promise<void>;
-  register: (email: string, password: string, name: string) => Promise<void>;
   logout: () => void;
 }
 
@@ -34,41 +32,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   }, []);
 
-  const login = async (email: string, password: string) => {
-    try {
-      const user = await prisma.user.findUnique({
-        where: { email },
-        select: { id: true, email: true, name: true, password: true },
-      });
-
-      if (!user || user.password !== password) {
-        throw new Error('Invalid credentials');
-      }
-
-      const { password: _, ...userData } = user;
-      setUser(userData);
-      setIsAuthenticated(true);
-      localStorage.setItem('authUser', JSON.stringify(userData));
-    } catch (error) {
-      console.error('Login error:', error);
-      throw error;
-    }
-  };
-
-  const register = async (email: string, password: string, name: string) => {
-    try {
-      await prisma.user.create({
-        data: {
-          email,
-          password,
-          name,
-        },
-      });
-    } catch (error) {
-      console.error('Registration error:', error);
-      throw error;
-    }
-  };
 
   const logout = () => {
     setUser(null);
@@ -77,7 +40,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   return (
-    <AuthContext.Provider value={{ isAuthenticated, user, login, register, logout }}>
+    <AuthContext.Provider value={{ isAuthenticated, user,logout }}>
       {children}
     </AuthContext.Provider>
   );

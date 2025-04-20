@@ -9,8 +9,6 @@ import Button from '../ui/Button';
 interface HeaderProps {
   user: any | null;
   onLogout: () => void;
-  isDarkMode: boolean;
-  toggleDarkMode: () => void;
 }
 
 const Header: React.FC<HeaderProps> = ({ user, onLogout }) => {
