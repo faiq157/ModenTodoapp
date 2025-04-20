@@ -2,8 +2,7 @@
 
 import React, { useEffect } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
-import LoginForm from '../components/auth/LoginForm';
-import RegisterForm from '../components/auth/RegisterForm';
+
 import { CheckSquare } from 'lucide-react';
 
 interface AuthPageProps {
@@ -37,14 +36,6 @@ const AuthPage: React.FC<AuthPageProps> = ({
         <p className="mt-2 text-sm text-muted">
           The elegant productivity app for your daily tasks
         </p>
-      </div>
-
-      <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
-        {isLoginPage ? (
-          <LoginForm onLoginSuccess={onLoginSuccess} />
-        ) : (
-          <RegisterForm onRegisterSuccess={onRegisterSuccess} />
-        )}
       </div>
     </div>
   );
